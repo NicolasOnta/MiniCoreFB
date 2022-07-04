@@ -2,7 +2,7 @@ import {React, useEffect, useState } from "react";
 
 function Home(){
     const [users, setUsers] = useState(null);
-    const urlGet = "https://localhost:7221/api/users";
+    const urlGet = "https://minicore-back-hiriart.herokuapp.com/api/users";
 
     useEffect(() => {
         getAll();
