@@ -98,6 +98,7 @@ td{
     justify-content: center;
     margin: 2px 4px 8px 4px;
     overflow-x: auto;
+    min-height: 35px;
     max-width: 90%;
 }
 
