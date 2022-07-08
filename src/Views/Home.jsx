@@ -1,23 +1,24 @@
-import {React, useEffect, useState } from "react";
+import {React, useEffect, useState, useContext, Fragment } from "react";
+import {API_URL_Context} from '../API_Context.jsx'//Immport from original context file
+import ReadRowUserPass from "./Components/ReadRowUserPass.jsx";
 import '../css/Home.css'
 
 function Home(){
     const [users, setUsers] = useState(null);
     const [passTypes, setPassTypes] = useState(null);
-    const [userPasses, setUserPasses] = useState(null);
-    const [calcRequest, setCalcRequest] = useState({
+    const [calcResponses, setCalcResponses] = useState(null);
+    const [filterForm, setFilterForm] = useState({
         startDate : ''
     });
-    const urlGetUsers = "https://localhost:7221/api/users";
-    const urlGetTypes = "https://localhost:7221/api/pass-types";
-    const urlGetPasses = "https://localhost:7221/api/user-passes";
-    const urlCore = "https://localhost:7221/api/calc";
+    const urlGetUsers = `${useContext(API_URL_Context)}/api/users`;
+    const urlGetTypes = `${useContext(API_URL_Context)}/api/pass-types`;
+    const urlGetPasses = `${useContext(API_URL_Context)}/api/user-passes`;
+    const urlCore = `${useContext(API_URL_Context)}/api/calc`;
 
     useEffect(() => {
         document.title = "Diego Hiriart - MiniCore"
         getAllUsers();
         getAllPassTypes();
-        getAllUserPasses();
     }, [])
 
     const getAllUsers = async () => {
@@ -53,27 +54,45 @@ function Home(){
     }
 
     const handleFormChange = (event) => {
+        var fieldValue = event.target.value;//Get the value of the field
+        event.preventDefault();
 
+        console.log(fieldValue);
+        
+        const fieldName = event.target.getAttribute("name");//Get the name field
+
+        const newFormData = {...filterForm}//Get the current state of filterForm
+        newFormData[fieldName] = fieldValue//Update the value of a field
+
+        setFilterForm(newFormData);
     }
 
-    const getAllUserPasses = async () => {
-        const requestOptions = {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        };
-        await fetch(urlGetPasses, requestOptions)
-        .then(res => {
-            if(res.ok){
-                res.json()
-                .then(json => setUserPasses(json));
-            }else {
-                console.log("Get user passes failed");
-            }
-        })
-    }
+    const submitFilter = (event) => {
+        event.preventDefault();
 
-    const submitFilter = async () => {
+        const filterRequest = async (filter) =>{
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(filter)
+            };
+            console.log(JSON.stringify(filter))
+            await fetch(urlCore, requestOptions)
+                .then(res => {
+                    if(res.ok){
+                        res.json()
+                        .then(json => setCalcResponses(json))
+                    }else if(res.status == 400 || res.status == 500){
+                        console.log("Filter error");
+                    }
+                });
+        }
 
+        const filter = {
+            startDate : filterForm.startDate
+        }
+
+        filterRequest(filter)
     }
 
     let content = 
@@ -135,9 +154,10 @@ function Home(){
         </div>
         <main class="filtering">
             <h2>Passes filtering</h2>
+            <p>Select a starting date to filter purchased parking passes that should run out after this date</p>
             <form class="filter-form" onSubmit={submitFilter}>
                 <label>Start Date </label>
-                <input type="date" required onChange={handleFormChange}></input>
+                <input type="date" name="startDate" required onChange={handleFormChange}></input>
                 <button type="submit" onChange={handleFormChange}>Search</button>
             </form>
             <div class="filter-results">
@@ -146,11 +166,15 @@ function Home(){
                         <th>User</th>
                         <th>Pass type</th>
                         <th>Purchase date</th>
-                        <th>Estimated end date</th>
-                        <th>Estimated remaining passes</th>
+                        <th>Estimated date passes run out</th>
+                        <th>Estimated remaining passes (to today)</th>
                     </thead>
                     <tbody>
-                        
+                    {calcResponses &&
+                        calcResponses.map((calcResponse) => (
+                                <ReadRowUserPass calcResponse = {calcResponse}/>//If there were multiple components to render in this tbody, they should be inside a Fragment
+                        ))
+                    }
                     </tbody>
                 </table>
             </div>
