@@ -4,6 +4,30 @@ body{
     padding: 0;
 }
 
+table, thead, tbody, th, tr, td{
+    border-collapse: collapse;
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+    padding: 2px 4px;
+    text-align: center;
+}
+
+table{
+    margin: 0 8px;
+    padding: 0;
+}
+
+th{
+    word-wrap: normal;
+}
+
+td{
+    word-wrap: break-word;
+    word-break: break-all;
+    max-width: 185px;
+}
+
 .container{
     background-color: rgb(19, 129, 180);
     display: flex;
@@ -23,13 +47,13 @@ body{
 
 .title{
     background-color: cadetblue;
-    padding: 0 16px;
+    padding: 0 10px;
 }
 
 .info{
     display: flex;
     flex-direction: column;
-    padding: 4px 6px;
+    padding: 4px 14px;
 }
 
 .data-list{
@@ -45,22 +69,17 @@ body{
     flex-direction: column;
 }
 
-table, thead, tbody, th, tr, td{
-    border-collapse: collapse;
-    border-width: 2px;
-    border-color: black;
-    border-style: solid;
-    padding: 1px 6px;
-    text-align: center;
-}
-
 .filtering{
     align-items: center;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 4px 6px;
+    padding: 16px 6px;
+}
+
+.filtering h2, p{
+    margin: 6px 0;
 }
 
 .filter-form{
@@ -69,12 +88,17 @@ table, thead, tbody, th, tr, td{
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 10px;
+    margin: 2px 0;
     padding: 4px 4px;
 }
 
 .filter-results{
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    margin: 2px 4px 8px 4px;
+    overflow-x: auto;
+    max-width: 90%;
 }
 
 .footer{
