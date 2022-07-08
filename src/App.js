@@ -6,9 +6,9 @@ import './App.css';
 
 //Check if the  environment is production or development, set up the API URL accordingly
 let apiContextValue = ''
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
     apiContextValue = process.env.REACT_APP_API_URL_DEV
-}else{
+}else if(process.env.NODE_ENV === 'production'){
     apiContextValue = process.env.REACT_APP_API_URL_PROD
 }
 
