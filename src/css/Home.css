@@ -102,6 +102,19 @@ td{
     max-width: 90%;
 }
 
+.all-passes{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 16px 6px;
+}
+
+.all-passes h2, p{
+    margin: 6px 0;
+}
+
 .footer{
     background-color: rgb(148, 148, 148);
     color: black;

@@ -1,11 +1,13 @@
 import {React, useEffect, useState, useContext, Fragment } from "react";
 import {API_URL_Context} from '../API_Context.jsx'//Immport from original context file
+import ReadRowResults from "./Components/ReadRowResults.jsx";
 import ReadRowUserPass from "./Components/ReadRowUserPass.jsx";
 import '../css/Home.css'
 
 function Home(){
     const [users, setUsers] = useState(null);
     const [passTypes, setPassTypes] = useState(null);
+    const [userPasses, setuserPasses] = useState(null);
     const [calcResponses, setCalcResponses] = useState(null);
     const [filterForm, setFilterForm] = useState({
         startDate : ''
@@ -19,6 +21,7 @@ function Home(){
         document.title = "Diego Hiriart - MiniCore"
         getAllUsers();
         getAllPassTypes();
+        getAllUserPasses();
     }, [])
 
     const getAllUsers = async () => {
@@ -49,6 +52,22 @@ function Home(){
                 .then(json => setPassTypes(json));
             }else {
                 console.log("GET pass types failed");
+            }
+        })
+    }
+
+    const getAllUserPasses = async () => {
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        };
+        await fetch(urlGetPasses, requestOptions)
+        .then(res => {
+            if(res.ok){
+                res.json()
+                .then(json => setuserPasses(json));
+            }else {
+                console.log("GET user passes failed");
             }
         })
     }
@@ -154,7 +173,7 @@ function Home(){
         </div>
         <main class="filtering">
             <h2>Passes filtering</h2>
-            <p>Select a starting date to filter purchased parking passes that should run out after this date</p>
+            <p>Select a starting date to filter purchased parking passes that should run out after this date. Passes that already ran out are not shown.</p>
             <form class="filter-form" onSubmit={submitFilter}>
                 <label>Start Date </label>
                 <input type="date" name="startDate" required onChange={handleFormChange}></input>
@@ -172,13 +191,32 @@ function Home(){
                     <tbody>
                     {calcResponses &&
                         calcResponses.map((calcResponse) => (
-                                <ReadRowUserPass calcResponse = {calcResponse}/>//If there were multiple components to render in this tbody, they should be inside a Fragment
+                                <ReadRowResults calcResponse = {calcResponse}/>//If there were multiple components to render in this tbody, they should be inside a Fragment
                         ))
                     }
                     </tbody>
                 </table>
             </div>
         </main>
+        <div class="all-passes">
+            <h2>All purchased passes</h2>
+            <p>So that they can be compared with the filter, all purchased passes are shown here.</p>
+            <table>
+                <thead>
+                    <th>Purchased pass Id</th>
+                    <th>User</th>
+                    <th>Pass type</th>
+                    <th>Purchase date</th>
+                </thead>
+                <tbody>
+                {userPasses &&
+                    userPasses.map((userPass) => (
+                            <ReadRowUserPass userPass = {userPass} users = {users} passTypes = {passTypes}/>
+                    ))
+                }
+                </tbody>
+            </table>
+        </div>
         <div class="footer">
             <div>
                 <p>Code</p>
