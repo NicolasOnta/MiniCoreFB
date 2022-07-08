@@ -209,7 +209,7 @@ function Home(){
                     <th>Purchase date</th>
                 </thead>
                 <tbody>
-                {userPasses &&
+                {userPasses && users && passTypes &&
                     userPasses.map((userPass) => (
                             <ReadRowUserPass userPass = {userPass} users = {users} passTypes = {passTypes}/>
                     ))
