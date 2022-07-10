@@ -27,5 +27,10 @@ The project consists of a site where parking passes can be checked, this include
   - Calculate an estimated date on which the passes will ran out.
   - Using the selected date, filter out passes that would run out before that date.
 
+# Useful resources / Documentation
+  - [React Hooks useContext Tutorial (Storing a User)](https://youtu.be/lhMKvyLRWo0)
+  - [Fragments - React](https://reactjs.org/docs/fragments.html)
+  - [Adding Custom Environment Variables | Create React App](https://create-react-app.dev/docs/adding-custom-environment-variables/)
+
 # Contact
 [hiriart.leon.d@gmail.com](mailto:hiriart.leon.d@gmail.com)
