@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/MiniCoreFB/static/css/main.dfe05e5c.css",
+    "main.js": "/MiniCoreFB/static/js/main.19c4347f.js",
+    "static/js/787.7d7aa54b.chunk.js": "/MiniCoreFB/static/js/787.7d7aa54b.chunk.js",
+    "index.html": "/MiniCoreFB/index.html",
+    "main.dfe05e5c.css.map": "/MiniCoreFB/static/css/main.dfe05e5c.css.map",
+    "main.19c4347f.js.map": "/MiniCoreFB/static/js/main.19c4347f.js.map",
+    "787.7d7aa54b.chunk.js.map": "/MiniCoreFB/static/js/787.7d7aa54b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.dfe05e5c.css",
+    "static/js/main.19c4347f.js"
+  ]
+}
