@@ -1,5 +1,14 @@
 import {React, useEffect, useState, useContext, Fragment } from "react";
 import {API_URL_Context} from '../API_Context.jsx'//Immport from original context file
+import { db } from "../firebase-conf";
+import {
+    collection,
+    getDocs,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    doc,
+  } from "firebase/firestore";
 import ReadRowResults from "./Components/ReadRowResults.jsx";
 import ReadRowUserPass from "./Components/ReadRowUserPass.jsx";
 import '../css/Home.css'
@@ -12,64 +21,35 @@ function Home(){
     const [filterForm, setFilterForm] = useState({
         startDate : ''
     });
+    const usersCollectionRef = collection(db, "users");
+    const passTypesCollectionRef = collection(db, "passTypes");
+    const userPassesCollectionRef = collection(db, "userPasses");
     const urlGetUsers = `${useContext(API_URL_Context)}/api/users`;
     const urlGetTypes = `${useContext(API_URL_Context)}/api/pass-types`;
     const urlGetPasses = `${useContext(API_URL_Context)}/api/user-passes`;
     const urlCore = `${useContext(API_URL_Context)}/api/calc`;
+    
 
     useEffect(() => {
-        document.title = "Diego Hiriart - MiniCore"
+        document.title = "Nicolas Ontaneda - MiniCore Front End Credits:Diego Hiriart"
         getAllUsers();
         getAllPassTypes();
         getAllUserPasses();
     }, [])
 
     const getAllUsers = async () => {
-        const requestOptions = {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        };
-        await fetch(urlGetUsers, requestOptions)
-        .then(res => {
-            if(res.ok){
-                res.json()
-                .then(json => setUsers(json));
-            }else {
-                console.log("GET users failed");
-            }
-        })
+        const data = await getDocs(usersCollectionRef);
+      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
 
     const getAllPassTypes = async () => {
-        const requestOptions = {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        };
-        await fetch(urlGetTypes, requestOptions)
-        .then(res => {
-            if(res.ok){
-                res.json()
-                .then(json => setPassTypes(json));
-            }else {
-                console.log("GET pass types failed");
-            }
-        })
+        const data = await getDocs(passTypesCollectionRef);
+        setPassTypes(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
 
     const getAllUserPasses = async () => {
-        const requestOptions = {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        };
-        await fetch(urlGetPasses, requestOptions)
-        .then(res => {
-            if(res.ok){
-                res.json()
-                .then(json => setuserPasses(json));
-            }else {
-                console.log("GET user passes failed");
-            }
-        })
+        const data = await getDocs(userPassesCollectionRef);
+        setuserPasses(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
 
     const handleFormChange = (event) => {
@@ -88,23 +68,10 @@ function Home(){
 
     const submitFilter = (event) => {
         event.preventDefault();
+        console.log(filterForm.startDate);
 
         const filterRequest = async (filter) =>{
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(filter)
-            };
-            console.log(JSON.stringify(filter))
-            await fetch(urlCore, requestOptions)
-                .then(res => {
-                    if(res.ok){
-                        res.json()
-                        .then(json => setCalcResponses(json))
-                    }else if(res.status == 400 || res.status == 500){
-                        console.log("Filter error");
-                    }
-                });
+            setCalcResponses(JSON.stringify(filter));
         }
 
         const filter = {
@@ -190,8 +157,8 @@ function Home(){
                     </thead>
                     <tbody>
                     {calcResponses &&
-                        calcResponses.map((calcResponse) => (
-                                <ReadRowResults calcResponse = {calcResponse}/>//If there were multiple components to render in this tbody, they should be inside a Fragment
+                        calcResponses.map((calcResponse, index) => (
+                                <ReadRowResults key={index} calcResponse = {calcResponse}/>//If there were multiple components to render in this tbody, they should be inside a Fragment
                         ))
                     }
                     </tbody>
@@ -210,8 +177,8 @@ function Home(){
                 </thead>
                 <tbody>
                 {userPasses && users && passTypes &&
-                    userPasses.map((userPass) => (
-                            <ReadRowUserPass userPass = {userPass} users = {users} passTypes = {passTypes}/>
+                    userPasses.map((userPass,index) => (
+                            <ReadRowUserPass key={index} userPass = {userPass} users = {users} passTypes = {passTypes}/>
                     ))
                 }
                 </tbody>
