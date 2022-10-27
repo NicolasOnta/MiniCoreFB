@@ -1,9 +1,7 @@
 import {React} from "react";
-import { format,add, differenceInMonths } from 'date-fns';//For adequate date formating, otherwise it shows one day less
+import { format } from 'date-fns';
 
 const ReadRowUserPass = ({userPass, users, passTypes}) => {
-    const today = new Date();
-    console.log(differenceInMonths(today,new Date(userPass.purchase.seconds*1000)));
     return(
         <tr key={userPass.userPassId}>
             <td>{userPass.userPassId}</td>
